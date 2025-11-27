@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@/context/teams/ThemeContext';
+import { useTheme } from '@/context/ThemeContext';
 
 const teams = [
   { id: 'redbull', name: 'Red Bull Racing', color: '#0600EF' },
