@@ -5,8 +5,7 @@ import RaceCalendar from '@/components/calendar/RaceCalendar';
 import SkyView from '@/components/weather/SkyView';
 import PaddockPass from '@/components/community/PaddockPass';
 import MerchStore from '@/components/commerce/MerchStore';
-// Importiamo il componente che abbiamo creato
-import TrackEvolution from '@/components/telemetry/TrackEvolution'; 
+import TrackEvolution from '@/components/telemetry/TrackEvolution';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Activity, Wind } from 'lucide-react';
 
@@ -15,7 +14,6 @@ export default function Home() {
     <ThemeProvider>
       <div className="min-h-screen bg-gradient-to-br from-black via-slate-950 to-slate-900 text-white">
         <div className="max-w-[1600px] mx-auto space-y-8 px-4 py-8">
-
           {/* HEADER */}
           <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
@@ -53,7 +51,6 @@ export default function Home() {
 
           {/* GRID PRINCIPALE */}
           <div className="grid grid-cols-12 gap-6">
-
             {/* COLONNA SINISTRA */}
             <div className="col-span-12 lg:col-span-8 space-y-6">
               {/* CALENDARIO */}
@@ -63,7 +60,6 @@ export default function Home() {
 
               {/* METEO + TRACK EVOLUTION */}
               <div className="grid grid-cols-2 gap-6">
-                
                 {/* Weather Radar */}
                 <div className="col-span-2 md:col-span-1 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/60 backdrop-blur-xl p-6 relative overflow-hidden group h-[320px]">
                   <div className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary-neon/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -79,15 +75,11 @@ export default function Home() {
                   <SkyView />
                 </div>
 
-                {/* Track Evolution (Qui usiamo il componente!) */}
+                {/* Track Evolution */}
                 <div className="col-span-2 md:col-span-1 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/60 backdrop-blur-xl p-6 relative overflow-hidden h-[320px]">
-                  {/* Glow effect ambientale */}
                   <div className="absolute inset-x-0 -top-20 h-32 bg-gradient-to-b from-primary-neon/15 to-transparent pointer-events-none" />
-                  
-                  {/* Inserimento del Componente Modulare */}
                   <TrackEvolution />
                 </div>
-
               </div>
             </div>
 
@@ -124,16 +116,16 @@ export default function Home() {
                     </span>
                   </div>
                 </div>
-                <div className="h-[300px] overflow-hidden relative rounded-2xl border border-white/10 bg-black/40">
+
+                {/* Contenitore scrollabile verticale */}
+                <div className="h-[300px] rounded-2xl border border-white/10 bg-black/40 overflow-y-auto relative">
                   <MerchStore />
-                  <div className="absolute bottom-0 w-full h-20 bg-gradient-to-t from-[#050505] via-black/80 to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </ThemeProvider>
   );
-} 
+}

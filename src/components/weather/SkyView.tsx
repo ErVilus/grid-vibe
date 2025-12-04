@@ -1,244 +1,110 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { CloudRain, Wind, Thermometer, Droplets } from 'lucide-react';
+'use client';
 
-const SkyView = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [weatherData] = useState({ air: 24, track: 38, humidity: 62, wind: 12 });
+import React from 'react';
+import RaceCalendar from '@/components/calendar/RaceCalendar';
+import SkyView from '@/components/weather/SkyView';
+import PaddockPass from '@/components/community/PaddockPass';
+import MerchStore from '@/components/commerce/MerchStore';
+import TrackEvolution from '@/components/telemetry/TrackEvolution';
+import { ThemeProvider } from '@/context/ThemeContext';
+import { Activity } from 'lucide-react';
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resize = () => {
-      const { width, height } = container.getBoundingClientRect();
-      canvas.width = width * window.devicePixelRatio;
-      canvas.height = height * window.devicePixelRatio;
-      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-    };
-
-    resize();
-    window.addEventListener('resize', resize);
-
-    let animationFrameId: number;
-    const clouds = Array.from({ length: 6 }, () => ({
-      x: Math.random() * canvas.width,
-      y: 40 + Math.random() * (canvas.height * 0.4),
-      radius: 40 + Math.random() * 50,
-      speed: 0.3 + Math.random() * 0.4,
-    }));
-
-    const raindrops = Array.from({ length: 80 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      length: 8 + Math.random() * 10,
-      speed: 4 + Math.random() * 3,
-    }));
-
-    let radarAngle = 0;
-
-    const render = () => {
-      const w = canvas.width / window.devicePixelRatio;
-      const h = canvas.height / window.devicePixelRatio;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // background
-      const bgGradient = ctx.createLinearGradient(0, 0, 0, h);
-      bgGradient.addColorStop(0, '#050814');
-      bgGradient.addColorStop(1, '#050505');
-      ctx.fillStyle = bgGradient;
-      ctx.fillRect(0, 0, w, h);
-
-      // radar center
-      const radarCenterX = w * 0.5;
-      const radarCenterY = h * 0.5;
-      const radarRadius = Math.min(w, h) * 0.42;
-
-      ctx.save();
-      ctx.translate(radarCenterX, radarCenterY);
-
-      // radar rings
-      for (let i = 1; i <= 3; i++) {
-        ctx.beginPath();
-        ctx.strokeStyle = 'rgba(0,229,255,0.12)';
-        ctx.lineWidth = 1;
-        ctx.arc(0, 0, (radarRadius / 3) * i, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      // radar sweep
-      const sweepGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radarRadius);
-      sweepGradient.addColorStop(0, 'rgba(0,229,255,0.45)');
-      sweepGradient.addColorStop(1, 'rgba(0,229,255,0)');
-      ctx.fillStyle = sweepGradient;
-      ctx.rotate((radarAngle * Math.PI) / 180);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, radarRadius, -0.18, 0.18);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      radarAngle = (radarAngle + 0.8) % 360;
-
-      // TRACK ISOMETRICO CENTRATO
-      ctx.save();
-
-      const baseWidth = 500;
-      const baseHeight = 400;
-      const scale = (radarRadius * 1.4) / Math.max(baseWidth, baseHeight);
-
-      ctx.translate(radarCenterX, radarCenterY);
-      ctx.scale(scale, scale);
-      ctx.translate(-baseWidth / 2, -baseHeight / 2);
-
-      ctx.beginPath();
-      ctx.strokeStyle = '#303030';
-      ctx.lineWidth = 22;
-      ctx.lineJoin = 'round';
-      ctx.moveTo(100, 120);
-      ctx.lineTo(280, 60);
-      ctx.lineTo(380, 140);
-      ctx.lineTo(420, 260);
-      ctx.lineTo(260, 320);
-      ctx.lineTo(140, 280);
-      ctx.closePath();
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.strokeStyle = '#00E5FF';
-      ctx.lineWidth = 3;
-      ctx.shadowBlur = 18;
-      ctx.shadowColor = '#00E5FF';
-      ctx.moveTo(100, 120);
-      ctx.lineTo(280, 60);
-      ctx.lineTo(380, 140);
-      ctx.lineTo(420, 260);
-      ctx.lineTo(260, 320);
-      ctx.lineTo(140, 280);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // pit lane
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(250,250,250,0.4)';
-      ctx.setLineDash([8, 6]);
-      ctx.moveTo(120, 140);
-      ctx.lineTo(200, 210);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.restore();
-
-      // clouds
-      clouds.forEach((cloud) => {
-        cloud.x += cloud.speed;
-        if (cloud.x > w + cloud.radius) cloud.x = -cloud.radius;
-        const gradient = ctx.createRadialGradient(
-          cloud.x,
-          cloud.y,
-          0,
-          cloud.x,
-          cloud.y,
-          cloud.radius
-        );
-        gradient.addColorStop(0, 'rgba(80,150,255,0.6)');
-        gradient.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // rain
-      ctx.strokeStyle = 'rgba(160,200,255,0.7)';
-      ctx.lineWidth = 1;
-      raindrops.forEach((drop) => {
-        drop.y += drop.speed;
-        if (drop.y > h) {
-          drop.y = -10;
-          drop.x = Math.random() * w;
-        }
-        ctx.beginPath();
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x + 2, drop.y + drop.length);
-        ctx.stroke();
-      });
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
+export default function Home() {
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-[400px] relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-black shadow-[0_0_40px_rgba(0,0,0,0.7)]"
-    >
-      <div className="absolute top-4 left-4 z-10">
-        <div className="flex items-center gap-2">
-          <CloudRain className="text-primary-neon" size={22} />
-          <h2 className="text-lg font-black text-white italic tracking-tight">
-            SKY RADAR
-          </h2>
-        </div>
-        <p className="text-[11px] text-text-dim font-mono mt-1 uppercase tracking-[0.2em]">
-          live composite // 5 min delay
-        </p>
-      </div>
+    <ThemeProvider>
+      {/* Sfondo generale molto scuro come da screenshot */}
+      <div className="min-h-screen bg-[#0E0E0E] text-white p-6">
+        <div className="max-w-[1800px] mx-auto space-y-6">
 
-      <canvas ref={canvasRef} className="w-full h-full object-cover opacity-90" />
+          {/* HEADER MINIMALE */}
+          <header className="flex justify-between items-center mb-4 px-2">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-white">Dashboard</h2>
+              <p className="text-xs text-gray-500 font-mono mt-1">
+                MONACO GP • QUALIFYING SESSION
+              </p>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1A1A1A] rounded-full border border-white/5">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider">System Online</span>
+            </div>
+          </header>
 
-      <div className="absolute bottom-4 left-4 right-4 flex justify-between gap-2">
-        <div className="bg-black/65 backdrop-blur-lg rounded-xl p-3 flex-1 border border-white/15">
-          <div className="flex items-center gap-2 text-text-dim text-[10px] uppercase font-bold mb-1">
-            <Thermometer size={12} /> Air
+          {/* --- BENTO GRID LAYOUT (3 COLONNE) --- */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+
+            {/* 1. CALENDARIO (Occupa 2 colonne in larghezza) */}
+            <div className="lg:col-span-2 h-full min-h-[400px]">
+              <div className="h-full bg-[#161616] rounded-[30px] p-6 border border-white/5 shadow-xl relative overflow-hidden">
+                 {/* Titolo Sezione */}
+                 <div className="absolute top-6 left-6 z-10">
+                    <h3 className="text-gray-400 text-xs font-black uppercase tracking-widest">Race Calendar</h3>
+                 </div>
+                 <div className="mt-4">
+                    <RaceCalendar />
+                 </div>
+              </div>
+            </div>
+
+            {/* 2. NEWS FEED (Colonna destra alta) */}
+            <div className="lg:col-span-1 h-full min-h-[400px]">
+              <div className="h-full bg-[#161616] rounded-[30px] border border-white/5 shadow-xl overflow-hidden flex flex-col">
+                 <div className="p-6 pb-2 border-b border-white/5 bg-[#1A1A1A]">
+                    <h3 className="text-gray-400 text-xs font-black uppercase tracking-widest flex items-center justify-between">
+                        News Feed <span className="w-2 h-2 bg-primary-neon rounded-full" />
+                    </h3>
+                 </div>
+                 <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
+                    <PaddockPass />
+                 </div>
+              </div>
+            </div>
+
+            {/* 3. WEATHER RADAR (Basso Sinistra) */}
+            <div className="lg:col-span-1 h-[320px]">
+               <div className="h-full bg-[#161616] rounded-[30px] p-1 border border-white/5 shadow-xl relative overflow-hidden group">
+                  <div className="absolute top-6 left-6 z-20 pointer-events-none">
+                     <h3 className="text-gray-400 text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                        <Activity size={14} className="text-primary-neon"/> Weather Radar
+                     </h3>
+                  </div>
+                  {/* SkyView si adatta all'altezza */}
+                  <SkyView />
+               </div>
+            </div>
+
+            {/* 4. TRACK EVOLUTION (Basso Centro) */}
+            <div className="lg:col-span-1 h-[320px]">
+               <div className="h-full bg-[#161616] rounded-[30px] p-6 border border-white/5 shadow-xl flex flex-col relative">
+                  {/* Sfondo griglia decorativa */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+                  
+                  <div className="relative z-10 h-full">
+                     <TrackEvolution />
+                  </div>
+               </div>
+            </div>
+
+            {/* 5. FLASH SALE (Basso Destra) */}
+            <div className="lg:col-span-1 h-[320px]">
+               <div className="h-full bg-[#161616] rounded-[30px] border border-white/5 shadow-xl relative overflow-hidden">
+                  <div className="p-5 flex justify-between items-center z-10 relative">
+                     <h3 className="text-white text-lg font-black italic tracking-tighter">FLASH SALE</h3>
+                     <span className="text-[10px] bg-white text-black px-2 py-1 rounded font-bold uppercase">-20% Pitlane</span>
+                  </div>
+                  
+                  <div className="absolute inset-0 top-12 bottom-0 overflow-y-auto p-2">
+                     <MerchStore />
+                  </div>
+                  
+                  {/* Sfumatura in basso per coprire lo scroll */}
+                  <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#161616] to-transparent pointer-events-none" />
+               </div>
+            </div>
+
           </div>
-          <span className="text-xl font-mono text-white">
-            {weatherData.air}°
-          </span>
-          <p className="text-[10px] text-gray-400 font-mono mt-1">
-            stable • light cloud
-          </p>
-        </div>
-        <div className="bg-black/65 backdrop-blur-lg rounded-xl p-3 flex-1 border border-white/15">
-          <div className="flex items-center gap-2 text-text-dim text-[10px] uppercase font-bold mb-1">
-            <Droplets size={12} /> Hum
-          </div>
-          <span className="text-xl font-mono text-primary-neon">
-            {weatherData.humidity}%
-          </span>
-          <p className="text-[10px] text-gray-400 font-mono mt-1">
-            light rain cells NW
-          </p>
-        </div>
-        <div className="bg-black/65 backdrop-blur-lg rounded-xl p-3 flex-1 border border-white/15">
-          <div className="flex items-center gap-2 text-text-dim text-[10px] uppercase font-bold mb-1">
-            <Wind size={12} /> Wind
-          </div>
-          <span className="text-xl font-mono text-white">
-            {weatherData.wind}{' '}
-            <span className="text-[10px]">km/h</span>
-          </span>
-          <p className="text-[10px] text-gray-400 font-mono mt-1">
-            crosswind • T1–T4
-          </p>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
-};
-
-export default SkyView;
+}
