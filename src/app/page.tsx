@@ -2,7 +2,7 @@
 
 import React from 'react';
 import RaceCalendar from '@/components/calendar/RaceCalendar';
-import SkyView from '@/components/weather/SkyView';
+import WeatherRadar from '@/components/weather/WeatherRadar';
 import PaddockPass from '@/components/community/PaddockPass';
 import MerchStore from '@/components/commerce/MerchStore';
 import TrackEvolution from '@/components/telemetry/TrackEvolution';
@@ -72,7 +72,7 @@ export default function Home() {
                       track: damp → dry
                     </span>
                   </div>
-                  <SkyView />
+                  <WeatherRadar />
                 </div>
 
                 {/* Track Evolution */}

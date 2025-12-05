@@ -6,16 +6,16 @@ import { useRouter } from 'next/navigation';
 import CountdownTicker from './CountdownTicker';
 
 const races = [
-  { id: 1, name: 'Monaco Grand Prix', circuit: 'Circuit de Monaco', date: '2025-05-25T15:00:00', status: 'upcoming', flag: '🇲🇨' },
-  { id: 2, name: 'Spanish Grand Prix', circuit: 'Circuit de Barcelona-Catalunya', date: '2025-06-01T15:00:00', status: 'upcoming', flag: '🇪🇸' },
-  { id: 3, name: 'Canadian Grand Prix', circuit: 'Circuit Gilles-Villeneuve', date: '2025-06-15T20:00:00', status: 'upcoming', flag: '🇨🇦' },
+  { id: 1, name: 'Monaco Grand Prix', circuit: 'Circuit de Monaco', date: '2025-05-25T15:00:00', status: 'upcoming', flag: '🇲🇨', slug: 'monaco-grand-prix' },
+  { id: 2, name: 'Spanish Grand Prix', circuit: 'Circuit de Barcelona-Catalunya', date: '2025-06-01T15:00:00', status: 'upcoming', flag: '🇪🇸', slug: 'spanish-grand-prix' },
+  { id: 3, name: 'Canadian Grand Prix', circuit: 'Circuit Gilles-Villeneuve', date: '2025-06-15T20:00:00', status: 'upcoming', flag: '🇨🇦', slug: 'canadian-grand-prix' },
 ];
 
 const RaceCalendar = () => {
   const router = useRouter();
 
-  const handleRaceClick = (raceId: number) => {
-    router.push(`/calendar/${raceId}`);
+  const handleRaceClick = (slug: string) => {
+    router.push(`/calendar/${slug}`);
   };
 
   return (
@@ -41,7 +41,7 @@ const RaceCalendar = () => {
             <div
               key={race.id}
               className="relative w-full cursor-pointer"
-              onClick={() => handleRaceClick(race.id)}
+              onClick={() => handleRaceClick(race.slug)}
             >
               <div className="absolute inset-0 bg-primary-neon blur-[50px] opacity-20" />
               <div className="glass-panel border-primary-neon/40 rounded-3xl p-6 relative overflow-hidden group transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,229,255,0.35)]">
@@ -91,7 +91,7 @@ const RaceCalendar = () => {
         return (
           <button
             key={race.id}
-            onClick={() => handleRaceClick(race.id)}
+            onClick={() => handleRaceClick(race.slug)}
             className="w-full text-left glass-panel rounded-xl p-4 flex items-center justify-between group
                        hover:bg-white/5 hover:border-primary-neon/40 border border-white/5
                        transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-neon/60"

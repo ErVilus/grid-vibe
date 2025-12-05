@@ -12,7 +12,7 @@ const DataDive = () => {
   }, []);
 
   return (
-    <div className="w-full p-4 space-y-4">
+    <div className="w-full p-4 space-y-4 border-2 border-red-500">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-black text-white italic">LIVE TELEMETRY</h2>
         <div className="flex items-center gap-2">

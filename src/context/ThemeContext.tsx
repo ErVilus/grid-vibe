@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 
 const teamsData = {
   default: { primary: '#00E5FF', bg: '#121212' },
@@ -24,14 +24,16 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     root.style.setProperty('--primary-neon', theme.primary);
   }, [theme]);
 
-  const setTeam = (teamKey: string) => {
+  const setTeam = useCallback((teamKey: string) => {
     const newTheme = teamsData[teamKey as keyof typeof teamsData] || teamsData.default;
     setTheme(newTheme);
     setCurrentTeam(teamKey);
-  };
+  }, []);
+
+  const value = useMemo(() => ({ theme, setTeam, currentTeam }), [theme, currentTeam]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTeam, currentTeam }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
