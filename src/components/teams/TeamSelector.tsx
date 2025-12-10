@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -13,28 +15,38 @@ const TeamSelector = () => {
   const { setTeam, currentTeam } = useTheme();
 
   return (
-    <div className="w-full py-6 overflow-x-auto no-scrollbar">
-      <div className="flex px-4 gap-4">
-        {teams.map((team) => (
-          <button
-            key={team.id}
-            onClick={() => setTeam(team.id)}
-            className={`
-              relative flex-shrink-0 w-20 h-20 rounded-2xl glass-panel 
-              flex items-center justify-center transition-all duration-300
-              ${currentTeam === team.id ? 'scale-110 border-primary-neon shadow-[0_0_20px_var(--primary-neon)]' : 'opacity-60 hover:opacity-100'}
-            `}
-          >
-            <div 
-              className="w-12 h-12 rounded-full"
-              style={{ backgroundColor: team.color }} 
-            />
-            {currentTeam === team.id && (
-              <div className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-primary-neon animate-pulse" />
-            )}
-          </button>
-        ))}
-      </div>
+    <div className="mb-12">
+        <h3 className="text-center text-sm font-mono uppercase text-gray-400 tracking-widest mb-6">
+            Filter by Team
+        </h3>
+        <div className="flex justify-center items-center flex-wrap gap-3 sm:gap-4">
+            {teams.map((team) => (
+                <button
+                    key={team.id}
+                    onClick={() => setTeam(team.id)}
+                    className={`
+                        group relative px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider
+                        transition-all duration-300 ease-in-out
+                        border 
+                        flex items-center gap-3
+                        ${
+                            currentTeam === team.id
+                                ? 'bg-white text-black border-white'
+                                : 'bg-transparent text-white border-white/20 hover:border-white'
+                        }
+                    `}
+                >
+                    <span 
+                        className="w-3 h-3 rounded-full transition-all duration-300"
+                        style={{ 
+                            backgroundColor: team.color,
+                            boxShadow: currentTeam === team.id ? `0 0 10px ${team.color}` : 'none'
+                        }}
+                    ></span>
+                    {team.name}
+                </button>
+            ))}
+        </div>
     </div>
   );
 };

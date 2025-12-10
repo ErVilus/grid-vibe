@@ -28,6 +28,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0a0a0a] text-[#F0F0F0] min-h-screen selection:bg-primary-neon selection:text-background-deep overflow-x-hidden`}
+        suppressHydrationWarning
       >
         <div className="flex min-h-screen">
             {/* Sidebar Fissa */}
