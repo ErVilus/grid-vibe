@@ -56,8 +56,8 @@ const DriverGrid = () => {
             <div className="max-w-7xl mx-auto">
                 {/* Grid Header */}
                 <div className="text-center mb-16">
-                    <h1 className="text-6xl md:text-8xl font-black text-white italic tracking-tighter">
-                        THE GRID
+                    <h1 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter">
+                        THE GRID 2024
                     </h1>
                     <p className="mt-2 text-lg text-gray-400 font-mono tracking-widest">
                         2024 DRIVER ROSTER
@@ -92,7 +92,7 @@ const DriverGrid = () => {
                             
                             {/* Card Body */}
                             <div className="p-5 flex-grow flex flex-col justify-end">
-                                <h2 className="text-3xl font-extrabold text-white uppercase tracking-tight">
+                                <h2 className="text-xl font-extrabold text-white uppercase tracking-tight break-words">
                                     {driver.name}
                                 </h2>
                                 <p

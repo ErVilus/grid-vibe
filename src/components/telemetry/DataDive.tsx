@@ -12,12 +12,12 @@ const DataDive = () => {
   }, []);
 
   return (
-    <div className="w-full p-4 space-y-4 border-2 border-red-500">
+    <div className="w-full p-4 space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-black text-white italic">LIVE TELEMETRY</h2>
         <div className="flex items-center gap-2">
-           <div className="w-2 h-2 bg-secondary-alert rounded-full animate-pulse" />
-           <span className="text-xs font-mono text-secondary-alert">LIVE</span>
+           <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+           <span className="text-xs font-mono text-yellow-500">LIVE</span>
         </div>
       </div>
 
@@ -42,7 +42,7 @@ const DataDive = () => {
            
            <div className="w-full bg-white/10 h-1 mt-4 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-green-500 to-red-500 transition-all duration-100 ease-linear"
+                className="h-full bg-gradient-to-r from-green-500 to-yellow-500 transition-all duration-100 ease-linear"
                 style={{ width: `${(currentData.rpm / 15000) * 100}%` }} 
               />
            </div>
@@ -51,7 +51,7 @@ const DataDive = () => {
 
       <div className="grid grid-cols-6 gap-3 h-48">
          <div className="col-span-1 bg-black/40 rounded-xl p-2 flex flex-col justify-end items-center relative border border-white/5">
-            <div className="absolute top-2 text-[8px] text-text-dim uppercase -rotate-90">Throttle</div>
+            <div className="absolute top-2 text-[8px] text-text-ghost uppercase -rotate-90">Throttle</div>
             <div className="w-4 bg-gray-800 rounded-full h-full relative overflow-hidden">
                <div 
                  className="absolute bottom-0 w-full bg-green-500 transition-all duration-75 ease-out shadow-[0_0_10px_rgba(34,197,94,0.6)]"
@@ -65,10 +65,10 @@ const DataDive = () => {
          </div>
 
          <div className="col-span-1 bg-black/40 rounded-xl p-2 flex flex-col justify-end items-center relative border border-white/5">
-            <div className="absolute top-2 text-[8px] text-text-dim uppercase -rotate-90">Brake</div>
+            <div className="absolute top-2 text-[8px] text-text-ghost uppercase -rotate-90">Brake</div>
             <div className="w-4 bg-gray-800 rounded-full h-full relative overflow-hidden">
                <div 
-                 className="absolute bottom-0 w-full bg-secondary-alert transition-all duration-75 ease-out shadow-[0_0_10px_rgba(255,0,77,0.6)]"
+                 className="absolute bottom-0 w-full bg-orange-500 transition-all duration-75 ease-out shadow-[0_0_10px_rgba(249,115,22,0.6)]"
                  style={{ height: `${currentData.brake}%` }}
                />
             </div>
